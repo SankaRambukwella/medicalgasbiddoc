@@ -3,132 +3,834 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hospital Document Sharing</title>
+    <title>Hospital Document Portal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --secondary: #e11d48;
+            --light: #f8fafc;
+            --dark: #0f172a;
+            --success: #16a34a;
+            --warning: #eab308;
+            --info: #06b6d4;
+            --danger: #dc2626;
+        }
+        
         body {
-            background-color: #f4f6f9;
-            font-family: Arial, sans-serif;
+            background-color: #f1f5f9;
+            font-family: 'Poppins', sans-serif;
+            color: #334155;
         }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, #3b82f6 100%);
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            color: white;
+            border-radius: 0 0 25px 25px;
+            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.2);
+        }
+        
+        .main-title {
+            font-weight: 700;
+            margin: 0;
+            font-size: 1.8rem;
+            text-align: center;
+            padding: 0 15px;
+        }
+        
+        .sub-title {
+            font-weight: 300;
+            text-align: center;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+            opacity: 0.9;
+        }
+        
         .hospital-card {
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
+            margin-bottom: 25px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+        
         .hospital-card:hover {
-            transform: scale(1.02);
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(37, 99, 235, 0.15);
         }
+        
+        .card-body {
+            padding: 1.5rem;
+            position: relative;
+        }
+        
+        .card-title {
+            color: var(--dark);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            line-height: 1.4;
+            min-height: 3rem;
+        }
+        
+        .hospital-type {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 0.7rem;
+            padding: 3px 10px;
+            border-radius: 15px;
+            background-color: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
         .search-container {
             max-width: 600px;
-            margin: 20px auto;
+            margin: 30px auto;
+            position: relative;
         }
+        
+        .search-icon {
+            position: absolute;
+            left: 20px;
+            top: 15px;
+            color: #94a3b8;
+        }
+        
+        #searchInput {
+            padding: 15px 20px 15px 50px;
+            border-radius: 30px;
+            border: none;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        #searchInput:focus {
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
+            outline: none;
+        }
+        
+        .btn-access {
+            width: 100%;
+            padding: 12px;
+            border-radius: 30px;
+            background: linear-gradient(135deg, var(--primary) 0%, #3b82f6 100%);
+            border: none;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+        }
+        
+        .btn-access:hover {
+            background: linear-gradient(135deg, var(--primary-hover) 0%, #2563eb 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(37, 99, 235, 0.3);
+        }
+        
+        .coming-soon {
+            background-color: #f8fafc;
+            padding: 12px;
+            border-radius: 30px;
+            text-align: center;
+            font-style: italic;
+            color: #64748b;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .hospital-count {
+            text-align: center;
+            color: #64748b;
+            margin: 1rem 0 2rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .pagination {
+            margin-top: 2rem;
+            margin-bottom: 3rem;
+        }
+        
         .page-item.active .page-link {
-            background-color: #007bff;
-            border-color: #007bff;
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        .page-link {
+            color: var(--primary);
+            border-radius: 5px;
+            margin: 0 3px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            border-radius: 25px 25px 0 0;
+            margin-top: 3rem;
+        }
+        
+        .footer-links {
+            margin-bottom: 1rem;
+        }
+        
+        .footer-links a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+        
+        .footer-links a:hover {
+            opacity: 1;
+        }
+        
+        .copyright {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin: 0;
+        }
+        
+        /* Status Message */
+        .status-message {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 15px 25px;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            z-index: 1050;
+            transition: all 0.3s ease;
+            transform: translateY(100px);
+            opacity: 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .status-message.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .status-icon {
+            margin-right: 15px;
+            font-size: 20px;
+        }
+        
+        .status-text {
+            font-weight: 500;
+        }
+        
+        /* Modal styling */
+        .modal-content {
+            border-radius: 15px;
+            overflow: hidden;
+            border: none;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary) 0%, #3b82f6 100%);
+            color: white;
+            border: none;
+            padding: 1.5rem;
+        }
+        
+        .modal-title {
+            font-weight: 600;
+        }
+        
+        .modal-body {
+            padding: 2rem;
+        }
+        
+        .btn-close {
+            color: white;
+            opacity: 0.8;
+            box-shadow: none;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            color: #334155;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-control {
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            background-color: #f8fafc;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+            border-color: var(--primary);
+        }
+        
+        .btn-submit {
+            padding: 12px;
+            width: 100%;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--primary) 0%, #3b82f6 100%);
+            border: none;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-submit:hover {
+            background: linear-gradient(135deg, var(--primary-hover) 0%, #2563eb 100%);
+        }
+        
+        /* Card badge for document status */
+        .card-badge {
+            position: absolute;
+            top: -4px;
+            right: 20px;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .badge-available {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .badge-coming {
+            background-color: var(--warning);
+            color: white;
+        }
+        
+        /* Animations */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        /* Card Icons */
+        .hospital-icon {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(37, 99, 235, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+        
+        /* Filter tabs */
+        .filter-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-tab {
+            padding: 8px 20px;
+            margin: 5px;
+            border-radius: 30px;
+            background-color: white;
+            color: #64748b;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: none;
+        }
+        
+        .filter-tab:hover {
+            color: var(--primary);
+            background-color: rgba(37, 99, 235, 0.05);
+        }
+        
+        .filter-tab.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        /* Stats banner */
+        .stats-row {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 1.5rem;
+            }
+            
+            .card-title {
+                min-height: auto;
+            }
+            
+            .filter-tab {
+                font-size: 0.8rem;
+                padding: 6px 12px;
+            }
+            
+            .status-message {
+                left: 30px;
+                right: 30px;
+                bottom: 20px;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Header -->
+    <div class="header">
+        <div class="container">
+            <h1 class="main-title">Medical Air & Gas Supply Portal</h1>
+            <p class="sub-title">Ministry of Health - 2025-2026 Awarding for 46 Hospitals & Institutions</p>
+        </div>
+    </div>
+
     <div class="container">
-        <h1 class="text-center my-4 text-primary">Supply,Delivery and Unloading of Medical Air & providing Maintenance Services For the Storage of Gases And Gas in Liquified for 18 Hospital/Institutions Under The Ministry of Health 2024-2025</h1>
+        <!-- Stats Banner -->
+        <div class="stats-row">
+            <div class="stat-item">
+                <div class="stat-number">46</div>
+                <div class="stat-label">Hospitals</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">20+</div>
+                <div class="stat-label">Available Documents</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Support</div>
+            </div>
+        </div>
         
+        <!-- Search -->
         <div class="search-container">
-            <input type="text" id="searchInput" class="form-control" placeholder="Search hospitals...">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="searchInput" class="form-control" placeholder="Search hospitals by name or location...">
+        </div>
+        
+        <!-- Filter Tabs -->
+        <div class="filter-tabs">
+            <button class="filter-tab active" data-filter="all">All Hospitals</button>
+            <button class="filter-tab" data-filter="teaching">Teaching Hospitals</button>
+            <button class="filter-tab" data-filter="general">General Hospitals</button>
+            <button class="filter-tab" data-filter="base">Base Hospitals</button>
+            <button class="filter-tab" data-filter="specialized">Specialized Institutes</button>
+        </div>
+
+        <div class="hospital-count" id="hospitalCount"></div>
+
+        <div id="statusMessage" class="status-message">
+            <span class="status-icon"><i class="fas fa-circle-notch fa-spin"></i></span>
+            <span id="statusText" class="status-text">Processing...</span>
         </div>
 
         <div id="hospitalContainer" class="row">
             <!-- Hospital cards will be dynamically added here -->
         </div>
 
-        <nav>
+        <nav aria-label="Hospital pagination">
             <ul id="pagination" class="pagination justify-content-center">
                 <!-- Pagination will be dynamically added here -->
             </ul>
         </nav>
     </div>
 
-    <script>
-        // Hospital data with name and Google Drive link
-        const hospitals = [
-            { name: "National Hospital Sri Lanka", link: "https://drive.google.com/drive/folders/1W7rbiJuT6mq-5zPJ9lW72l9UGwLnAP1j?usp=sharing" },
-            { name: "District General Hospital - Kanthale", link: "https://drive.google.com/drive/folders/1RhO0YadbDFieE4konSoDtwoRdoSMwxLf?usp=sharing" },
-            { name: "Castle Street Hospital For Women - Colombo", link: "https://drive.google.com/drive/folders/1MLiyRkv_YwAB_EAF1iesvD5lw1Ko0hYo?usp=sharing" },
-            { name: "Medical Research Institute - Borella", link: "https://drive.google.com/drive/folders/1X4SlLb69t12aQ3D31gEDSCCqci1vVbp_?usp=sharing" },
-            { name: "National Institute of Health Service - Kaluthara", link: "https://drive.google.com/drive/folders/1Vo3aHlYxd-cU5dWTIuSoB9tEo2tqXKqh?usp=sharing" },
-            { name: "District General Hospital - Kegalle", link: "https://drive.google.com/drive/folders/1VgEeU6RwXP1OOQwUwnR96rpTwj9vnChJ?usp=sharing" },
-            { name: "National Hospital - Kandy", link: "https://drive.google.com/drive/folders/1hDL72yTz-jfdBDhx3VD_mdmISIKZdFP2?usp=sharing" },
-            { name: "District General Hospital - Nuwara Eliya", link: "https://drive.google.com/drive/folders/15c9ypggKa0mawnG0Nt-d-O_2V0DciKiO?usp=sharing" },
-            { name: "District General Hospital - Nawalapitiya", link: "https://drive.google.com/drive/folders/1vW5En8dCq7bBwaCTofHXymJaXcNVuKsx?usp=sharing" },
-            { name: "Base Hospital - Gampola", link: "https://drive.google.com/drive/folders/18oxyAAbe1TQVgx4kJoMRhKsuShGIrnN7?usp=sharing" },
-            { name: "District General Hospital - Embilipitiya", link: "https://drive.google.com/drive/folders/1IoeyAPdA5K-DjQGdWR0EgY0-eXx_l5nM?usp=sharing" },
-            { name: "District General Hospital - Matale", link: "https://drive.google.com/drive/folders/13bfKzyYa6q1r4FEpYmDIoIHg61K9PHfU?usp=sharing" },
-            { name: "National Institute of Respiratory Diseases - Welisara", link: "https://drive.google.com/drive/folders/1mO_feSCOhmt6IF4sXaQClbJF8DeQDT6Y?usp=sharing" },
-            { name: "Teaching Hospital - Rathnapura", link: "https://drive.google.com/drive/folders/1u4RMvgHTpqSGHCTnKVsXpKAxh7vnYlpm?usp=sharing" },
-            { name: "Sirimawo Bandaranayake Children Hospital - Peradeniya", link: "https://drive.google.com/drive/folders/1Se3g_TS7snpgP0wRmbZY0CjziyHrzQQO?usp=sharing" },
-            { name: "Colombo North Teaching Hospital - Ragama", link: "https://drive.google.com/drive/folders/1avYDDbR9wEd1rivuoRWwQnfU-cV-gDTy?usp=sharing" },
-            { name: "National Institute of Nephrology - Maligawatta", link: "https://drive.google.com/drive/folders/1vgvXyKl6dT3ZhcgnakICJNfletZYcG4o?usp=sharing" },
-            { name: "Apeksha Hospital - Maharagama", link: "https://drive.google.com/drive/folders/1TKFAwZf4pon9r_uCoIiDb59TGoz7ct-c?usp=sharing" }
-        ];
+    <!-- Footer -->
+    <div class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="#"><i class="fas fa-info-circle me-1"></i>About</a>
+                <a href="#"><i class="fas fa-envelope me-1"></i>Contact</a>
+                <a href="#"><i class="fas fa-question-circle me-1"></i>Help</a>
+                <a href="#"><i class="fas fa-shield-alt me-1"></i>Privacy Policy</a>
+            </div>
+            <p class="copyright">&copy; 2024-2025 Deputy Director Genaral (Logistics) | All Rights Reserved</p>
+        </div>
+    </div>
 
-        const hospitalsPerPage = 3;
-        let currentPage = 1;
-
-        function displayHospitals(filteredHospitals) {
-            const container = document.getElementById('hospitalContainer');
-            const paginationContainer = document.getElementById('pagination');
-            container.innerHTML = '';
-            paginationContainer.innerHTML = '';
-
-            const totalPages = Math.ceil(filteredHospitals.length / hospitalsPerPage);
-            const startIndex = (currentPage - 1) * hospitalsPerPage;
-            const endIndex = startIndex + hospitalsPerPage;
-            const pageHospitals = filteredHospitals.slice(startIndex, endIndex);
-
-            // Create hospital cards
-            pageHospitals.forEach(hospital => {
-                const card = document.createElement('div');
-                card.className = 'col-md-4';
-                card.innerHTML = `
-                    <div class="card hospital-card">
-                        <div class="card-body">
-                            <h5 class="card-title">${hospital.name}</h5>
-                            ${hospital.link ? 
-                                `<a href="${hospital.link}" target="_blank" class="btn btn-primary">View Documents</a>` : 
-                                '<p class="text-muted">No documents available</p>'
-                            }
+    <!-- Password Modal -->
+    <div class="modal fade" id="passwordModal" tabindex="-1" aria-labelledby="passwordModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="passwordModalLabel"><i class="fas fa-lock me-2"></i>Secure Document Access</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="passwordForm">
+                        <div class="mb-4">
+                            <label for="hospitalPassword" class="form-label">Enter password for <span id="modalHospitalName" class="fw-bold"></span></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="fas fa-key"></i></span>
+                                <input type="password" class="form-control border-start-0" id="hospitalPassword" required>
+                            </div>
+                            <div class="form-text mt-2"><i class="fas fa-info-circle me-1"></i>Password is case-sensitive and provided to authorized personnel only.</div>
                         </div>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-submit"><i class="fas fa-unlock-alt me-2"></i>Access Documents</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
-            // Create pagination
-            for (let i = 1; i <= totalPages; i++) {
-                const li = document.createElement('li');
-                li.className = `page-item ${i === currentPage ? 'active' : ''}`;
-                li.innerHTML = `<a class="page-link" href="#" onclick="changePage(${i})">${i}</a>`;
-                paginationContainer.appendChild(li);
-            }
-        }
+    <script>
+        // Initialize variables
+        let currentFilter = "all";
+        let currentPage = 1;
+        let hospitalsPerPage = 9;
+        let currentHospital = null;
+        let passwordModal = null;
 
-        function changePage(page) {
-            currentPage = page;
-            displayHospitals(hospitals);
-        }
+        // Hospital data with added location and type properties
+        const hospitals = [
+            { name: "National Hospital Sri Lanka", location: "Colombo", type: "general", link: "https://drive.google.com/drive/folders/1W7rbiJuT6mq-5zPJ9lW72l9UGwLnAP1j?usp=sharing", password: "NHSL_Med2425", available: true },
+            { name: "District General Hospital - Kanthale", location: "Kanthale", type: "general", link: "https://drive.google.com/drive/folders/1RhO0YadbDFieE4konSoDtwoRdoSMwxLf?usp=sharing", password: "DGHKan_G24", available: true },
+            { name: "Castle Street Hospital For Women - Colombo", location: "Colombo", type: "specialized", link: "https://drive.google.com/drive/folders/1MLiyRkv_YwAB_EAF1iesvD5lw1Ko0hYo?usp=sharing", password: "CstWom_C25", available: true },
+            { name: "Medical Research Institute - Borella", location: "Borella", type: "specialized", link: "https://drive.google.com/drive/folders/1X4SlLb69t12aQ3D31gEDSCCqci1vVbp_?usp=sharing", password: "MRI_Bor24", available: true },
+            { name: "National Institute of Health Service - Kaluthara", location: "Kaluthara", type: "specialized", link: "https://drive.google.com/drive/folders/1Vo3aHlYxd-cU5dWTIuSoB9tEo2tqXKqh?usp=sharing", password: "NIHS_K25", available: true },
+            { name: "District General Hospital - Kegalle", location: "Kegalle", type: "general", link: "https://drive.google.com/drive/folders/1VgEeU6RwXP1OOQwUwnR96rpTwj9vnChJ?usp=sharing", password: "DGH_Keg24", available: true },
+            { name: "National Hospital - Kandy", location: "Kandy", type: "general", link: "https://drive.google.com/drive/folders/1hDL72yTz-jfdBDhx3VD_mdmISIKZdFP2?usp=sharing", password: "NHK_Gas25", available: true },
+            { name: "District General Hospital - Nuwara Eliya", location: "Nuwara Eliya", type: "general", link: "https://drive.google.com/drive/folders/15c9ypggKa0mawnG0Nt-d-O_2V0DciKiO?usp=sharing", password: "DGHNE_24", available: true },
+            { name: "District General Hospital - Nawalapitiya", location: "Nawalapitiya", type: "general", link: "https://drive.google.com/drive/folders/1vW5En8dCq7bBwaCTofHXymJaXcNVuKsx?usp=sharing", password: "DGHN_Air25", available: true },
+            { name: "Base Hospital - Gampola", location: "Gampola", type: "base", link: "https://drive.google.com/drive/folders/18oxyAAbe1TQVgx4kJoMRhKsuShGIrnN7?usp=sharing", password: "BH_Gamp24", available: true },
+            { name: "District General Hospital - Embilipitiya", location: "Embilipitiya", type: "general", link: "https://drive.google.com/drive/folders/1IoeyAPdA5K-DjQGdWR0EgY0-eXx_l5nM?usp=sharing", password: "DGH_Emb25", available: true },
+            { name: "District General Hospital - Matale", location: "Matale", type: "general", link: "https://drive.google.com/drive/folders/13bfKzyYa6q1r4FEpYmDIoIHg61K9PHfU?usp=sharing", password: "DGH_Mat24", available: true },
+            { name: "National Institute of Respiratory Diseases - Welisara", location: "Welisara", type: "specialized", link: "https://drive.google.com/drive/folders/1mO_feSCOhmt6IF4sXaQClbJF8DeQDT6Y?usp=sharing", password: "NIRD_W25", available: true },
+            { name: "Teaching Hospital - Rathnapura", location: "Rathnapura", type: "teaching", link: "https://drive.google.com/drive/folders/1u4RMvgHTpqSGHCTnKVsXpKAxh7vnYlpm?usp=sharing", password: "TH_Rath24", available: true },
+            { name: "Sirimawo Bandaranayake Children Hospital - Peradeniya", location: "Peradeniya", type: "specialized", link: "https://drive.google.com/drive/folders/1Se3g_TS7snpgP0wRmbZY0CjziyHrzQQO?usp=sharing", password: "SBCH_P25", available: true },
+            { name: "Colombo North Teaching Hospital - Ragama", location: "Ragama", type: "teaching", link: "https://drive.google.com/drive/folders/1avYDDbR9wEd1rivuoRWwQnfU-cV-gDTy?usp=sharing", password: "CNTH_R24", available: true },
+            { name: "National Institute of Nephrology - Maligawatta", location: "Maligawatta", type: "specialized", link: "https://drive.google.com/drive/folders/1vgvXyKl6dT3ZhcgnakICJNfletZYcG4o?usp=sharing", password: "NIN_M25", available: true },
+            { name: "Apeksha Hospital - Maharagama", location: "Maharagama", type: "specialized", link: "https://drive.google.com/drive/folders/1TKFAwZf4pon9r_uCoIiDb59TGoz7ct-c?usp=sharing", password: "AH_Maha24", available: true },
+            // Additional hospitals
+            { name: "District General Hospital - Hambanthota", location: "Hambanthota", type: "general", link: "https://drive.google.com/drive/folders/1BEYAQpn6hwXAd23uFiTDqP2zMvBNE28a?usp=drive_link", password: "DGH_Hamb25", available: true },
+            { name: "Ashrof Memorial Hospital - Kalmunai", location: "Kalmunai", type: "general", link: "https://drive.google.com/drive/folders/1k9cHdO-_9JGGLuoTU7QaoZ20LEhpSfUZ?usp=sharing", password: "AMH_Kal24", available: true },
+            { name: "Teaching Hospital - Kurunegala", location: "Kurunegala", type: "teaching", link: "https://drive.google.com/drive/folders/19zaNvP5rbhjL5_tYqfQ8v2C9Lp4Ntjj9?usp=sharing", password: "TH_Kuru25", available: true },
+            { name: "De Soyza Hospital - Colombo", location: "Colombo", type: "general", link: "https://drive.google.com/drive/folders/1xmts2KmbiWQnaGiaSFDuToMxNVpkzSJk?usp=sharing", password: "DSH_Col24", available: true },
+            { name: "District General Hospital - Kaluthara", location: "Kaluthara", type: "general", link: "https://drive.google.com/drive/folders/1ErgacxHBFk2yAgraTOMBFWAOc_qAsWw7?usp=sharing", password: "DGH_Kal25", available: true },
+            { name: "Base Hospital - Kalmunai (North)", location: "Kalmunai", type: "base", link: "https://drive.google.com/drive/folders/1jngz4rZnLbiCVj3mp3Nfgh_5UMwmMWID?usp=sharing", password: "BH_KalN24", available: true },
+            { name: "Teaching Hospital - Kalubowila", location: "Kalubowila", type: "teaching", link: "https://drive.google.com/drive/folders/10O9zV5aWLfIkRtIrb7t8DMXpCFbYyhlt?usp=sharing", password: "TH_Kalu25", available: true },
+            { name: "District General Hospital - Ampara", location: "Ampara", type: "general", link: "https://drive.google.com/drive/folders/197CT28nOxAvnnmSG1pqK_N5e_BBeO66_?usp=sharing", password: "DGH_Amp24", available: true },
+            { name: "Teaching Hospital - Anuradhapuraya", location: "Anuradhapuraya", type: "teaching", link: "https://drive.google.com/drive/folders/1Ck6MnSxIBNedY8KnBoHorsnNKOUfg2PL?usp=sharing", password: "TH_Anur25", available: true },
+            { name: "Teaching Hospital - Badulla", location: "Badulla", type: "teaching", link: "#", password: "TH_Bad24", available: false },
+            { name: "District General Hospital - Trincomalee", location: "Trincomalee", type: "general", link: "https://drive.google.com/drive/folders/1QgbyyikLO17kvQvv_5wb6CCnLzwm--Zu?usp=sharing", password: "DGH_Tri24", available: true },
+            { name: "District General Hospital - Matara", location: "Matara", type: "general", link: "#", password: "DGH_Mat25", available: false },
+            { name: "National Institute of Mental Health - Mulleriyawa", location: "Mulleriyawa", type: "specialized", link: "#", password: "NIMH_M24", available: false },
+            { name: "Infection Disease Hospital - Angoda", location: "Angoda", type: "specialized", link: "#", password: "IDH_Ang25", available: false },
+            { name: "Teaching Hospital - Karapitiya", location: "Karapitiya", type: "teaching", link: "#", password: "TH_Kara24", available: false },
+            { name: "Teaching Hospital - Batticaloa", location: "Batticaloa", type: "teaching", link: "#", password: "TH_Batt25", available: false },
+            { name: "National Eye Hospital - Colombo", location: "Colombo", type: "specialized", link: "#", password: "NEH_Col24", available: false },
+            { name: "Teaching Hospital - Negombo", location: "Negombo", type: "teaching", link: "#", password: "TH_Nego25", available: false },
+            { name: "Base Hospital - Mulleriyawa", location: "Mulleriyawa", type: "base", link: "#", password: "BH_Mull24", available: false },
+            { name: "Base Hospital - Pothuvil", location: "Pothuvil", type: "base", link: "https://drive.google.com/drive/folders/1Ie3h85CF8mddq56tbBIF5nv6hyPZKQSV?usp=sharing", password: "BH_Poth25", available: true },
+            { name: "District General Hospital - Polonnaruwa", location: "Polonnaruwa", type: "general", link: "https://drive.google.com/drive/folders/1epVEHC00IycifX8jMMgRUsJDQD09eONK?usp=sharing", password: "DGH_Pol24", available: true },
+            { name: "China - Sri Lanka Friendship National Nephrology Specialize Hospital - Polonnaruwa", location: "Polonnaruwa", type: "specialized", link: "https://drive.google.com/drive/folders/1wNn-TRKYaAjvTTjyaStfZ7LWc0iN1HKJ?usp=sharing", password: "CSLNSH_25", available: true },
+	    { name: "German Srilanka Friendship Hospital-Karapitiya", location: "Karapitiya", type: "specialized", link: "#", password: "GSL_Kar24", available: false },
+ 	    { name: "Teaching Hospital - Peradeniya", location: "Peradeniya", type: "teaching", link: "#", password: "TH_Pera25", available: false },
+	   { name: "District General Hospital - Monaragala", location: "Monaragala", type: "general", link: "#", password: "DGH_Mon25", available: false },
+	   { name: "Lady Ridgeway Hospital For Children - Colombo 08 ", location: "Colombo ", type: "specialized", link: "#", password: "LRH_Col24", available: false },
+	   { name: "Teaching Hospital - Kuliyapitiya", location: "Karapitiya", type: "teaching", link: "#", password: "TH_Kuli25", available: false },
 
-        // Search functionality
-        document.getElementById('searchInput').addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            const filteredHospitals = hospitals.filter(hospital => 
-                hospital.name.toLowerCase().includes(searchTerm)
-            );
-            currentPage = 1;
-            displayHospitals(filteredHospitals);
+
+];
+
+        // Function to initialize everything once DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Bootstrap modal
+            passwordModal = new bootstrap.Modal(document.getElementById('passwordModal'));
+            
+            // Initial rendering
+            renderHospitals();
+            updateHospitalCount();
+            
+            // Setup event listeners
+            setupEventListeners();
         });
 
-        // Initial display
-        displayHospitals(hospitals);
-    </script>
+        // Setup all event listeners
+        function setupEventListeners() {
+            // Search input listener
+            document.getElementById('searchInput').addEventListener('input', function() {
+                currentPage = 1;
+                renderHospitals();
+                updateHospitalCount();
+            });
+            
+            // Filter tab listeners
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Update active tab
+                    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Update filter and re-render
+                    currentFilter = this.getAttribute('data-filter');
+                    currentPage = 1;
+                    renderHospitals();
+                    updateHospitalCount();
+                });
+            });
+            
+            // Password form submission
+            document.getElementById('passwordForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const enteredPassword = document.getElementById('hospitalPassword').value;
+                
+                if (enteredPassword === currentHospital.password) {
+                    // Success - redirect to the Google Drive link
+                    showStatusMessage('success', 'Access granted! Redirecting to documents...');
+                    
+                    setTimeout(() => {
+                        window.open(currentHospital.link, '_blank');
+                        passwordModal.hide();
+                        document.getElementById('hospitalPassword').value = '';
+                    }, 1500);
+                } else {
+                    // Incorrect password
+                    showStatusMessage('error', 'Incorrect password. Please try again.');
+                }
+            });
+        }
+
+        // Render hospital cards based on current filter and search
+        function renderHospitals() {
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            const container = document.getElementById('hospitalContainer');
+            
+            // Filter hospitals based on search input and active filter
+            const filteredHospitals = hospitals.filter(hospital => {
+                const matchesSearch = hospital.name.toLowerCase().includes(searchInput) || 
+                                    hospital.location.toLowerCase().includes(searchInput);
+                const matchesFilter = currentFilter === 'all' || hospital.type === currentFilter;
+                
+                return matchesSearch && matchesFilter;
+            });
+            
+            // Calculate pagination
+            const totalPages = Math.ceil(filteredHospitals.length / hospitalsPerPage);
+            const startIndex = (currentPage - 1) * hospitalsPerPage;
+            const paginatedHospitals = filteredHospitals.slice(startIndex, startIndex + hospitalsPerPage);
+            
+            // Clear container
+            container.innerHTML = '';
+            
+            // Render hospital cards
+            paginatedHospitals.forEach(hospital => {
+                const card = createHospitalCard(hospital);
+                container.appendChild(card);
+            });
+            
+            // Render pagination
+            renderPagination(totalPages);
+        }
+
+        // Create hospital card element
+        function createHospitalCard(hospital) {
+            const col = document.createElement('div');
+            col.className = 'col-md-6 col-lg-4';
+            
+            // Get icon based on hospital type
+            let icon = 'hospital';
+            if (hospital.type === 'teaching') icon = 'graduation-cap';
+            else if (hospital.type === 'specialized') icon = 'stethoscope';
+            else if (hospital.type === 'base') icon = 'first-aid';
+            
+            // Format hospital type for display
+            let displayType = hospital.type.charAt(0).toUpperCase() + hospital.type.slice(1);
+            
+            const cardHtml = `
+                <div class="card hospital-card">
+                    <div class="card-body">
+                        <div class="hospital-icon">
+                            <i class="fas fa-${icon}"></i>
+                        </div>
+                        <h5 class="card-title">${hospital.name}</h5>
+                        <span class="hospital-type">${displayType}</span>
+                        <p class="card-text"><i class="fas fa-map-marker-alt me-2 text-secondary"></i>${hospital.location}</p>
+                        ${hospital.available ? 
+                            `<div class="card-badge badge-available"><i class="fas fa-check-circle me-1"></i>Available</div>
+                            <button class="btn btn-access" data-hospital-index="${hospitals.indexOf(hospital)}">
+                                <i class="fas fa-folder-open me-2"></i>Access Documents
+                            </button>` 
+                            :
+                            `<div class="card-badge badge-coming"><i class="fas fa-clock me-1"></i>Coming Soon</div>
+                            <div class="coming-soon">Documents being prepared</div>`
+                        }
+                    </div>
+                </div>
+            `;
+            
+            col.innerHTML = cardHtml;
+            
+            // Add event listener for access button if hospital is available
+            if (hospital.available) {
+                const accessBtn = col.querySelector('.btn-access');
+                accessBtn.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-hospital-index'));
+                    currentHospital = hospitals[index];
+                    
+                    // Update modal with hospital name
+                    document.getElementById('modalHospitalName').textContent = currentHospital.name;
+                    
+                    // Show password modal
+                    passwordModal.show();
+                });
+            }
+            
+            return col;
+        }
+
+        // Render pagination controls
+        function renderPagination(totalPages) {
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+            
+            if (totalPages <= 1) return;
+            
+            // Previous button
+            const prevLi = document.createElement('li');
+            prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+            prevLi.innerHTML = `<a class="page-link" href="#"><i class="fas fa-chevron-left"></i></a>`;
+            if (currentPage > 1) {
+                prevLi.addEventListener('click', function() {
+                    currentPage--;
+                    renderHospitals();
+                });
+            }
+            pagination.appendChild(prevLi);
+            
+            // Page numbers
+            for (let i = 1; i <= totalPages; i++) {
+                const pageLi = document.createElement('li');
+                pageLi.className = `page-item ${currentPage === i ? 'active' : ''}`;
+                pageLi.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+                
+                pageLi.addEventListener('click', function() {
+                    currentPage = i;
+                    renderHospitals();
+                });
+                
+                pagination.appendChild(pageLi);
+            }
+            
+            // Next button
+            const nextLi = document.createElement('li');
+            nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+            nextLi.innerHTML = `<a class="page-link" href="#"><i class="fas fa-chevron-right"></i></a>`;
+            if (currentPage < totalPages) {
+                nextLi.addEventListener('click', function() {
+                    currentPage++;
+                    renderHospitals();
+                });
+            }
+            pagination.appendChild(nextLi);
+        }
+
+        // Update hospital count message
+        function updateHospitalCount() {
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            
+            const filteredHospitals = hospitals.filter(hospital => {
+                const matchesSearch = hospital.name.toLowerCase().includes(searchInput) || 
+                                    hospital.location.toLowerCase().includes(searchInput);
+                const matchesFilter = currentFilter === 'all' || hospital.type === currentFilter;
+                
+                return matchesSearch && matchesFilter;
+            });
+            
+            const countElement = document.getElementById('hospitalCount');
+            countElement.textContent = `Showing ${filteredHospitals.length} hospital${filteredHospitals.length !== 1 ? 's' : ''}`;
+        }
+
+        // Show status message
+        function showStatusMessage(type, message) {
+            const statusMessage = document.getElementById('statusMessage');
+            const statusText = document.getElementById('statusText');
+            const statusIcon = statusMessage.querySelector('.status-icon');
+            
+            // Set icon and color based on message type
+            if (type === 'success') {
+                statusIcon.innerHTML = '<i class="fas fa-check-circle"></i>';
+                statusIcon.style.color = 'var(--success)';
+            } else if (type === 'error') {
+                statusIcon.innerHTML = '<i class="fas fa-exclamation-circle"></i>';
+                statusIcon.style.color = 'var(--danger)';
+            } else {
+                statusIcon.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
+                statusIcon.style.color = 'var(--primary)';
+            }
+            
+            // Set message
+            statusText.textContent = message;
+            
+            // Show message
+            statusMessage.classList.add('show');
+            
+            // Auto hide after 3 seconds
+            setTimeout(() => {
+                statusMessage.classList.remove('show');
+            }, 3000);
+        }
+
+ </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
